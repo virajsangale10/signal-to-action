@@ -36,7 +36,7 @@ export default function Today() {
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <Stat label="Needs your decision" value={count} foot={expiring.length ? <><Clock className="size-3.5" />{expiring.length} expire within 6h</> : 'None expiring soon'} footTone={expiring.length ? 'warning' : 'muted'} />
+        <Stat label="Needs your decision" value={count} foot={expiring.length ? <><Clock className="size-3.5" />{expiring.length} expire{expiring.length === 1 ? 's' : ''} within 6h</> : 'None expiring soon'} footTone={expiring.length ? 'warning' : 'muted'} />
         <Stat label="Released automatically today" value={autoToday} foot="61 digital steps · 12 rep suggestions" />
         <Stat label="Median time to decide" value="2m 10s" foot={<><ArrowDown className="size-3.5" />35s faster than last week</>} footTone="success" />
       </div>

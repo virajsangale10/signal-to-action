@@ -88,6 +88,8 @@
 
 @theme inline {
   --font-sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  /* Reading pages only (About). System fonts, so nothing extra to load. */
+  --font-serif: "Iowan Old Style", "Charter", "Sitka Heading", Cambria, Georgia, serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
