@@ -1,168 +1,177 @@
-# Spec: Signal to Action (review and approve an AI-drafted plan)
+# Spec: Signal to Action (v2, review by exception)
 
-Author: Viraj · Status: concept, for discussion · Prototype: `index.html`
+Author: Viraj · Status: concept, for discussion · Prototype: the React app in this repo
 
-> Independent concept built from public information. All doctors, brands (Velora) and numbers are fictional. Not affiliated with or endorsed by PharmaForceIQ.
+> Independent concept built from public information. Velora, every doctor, rep, NPI and number is fictional. Not affiliated with or endorsed by any company.
 
 ---
 
 ## 1. Problem
 
-The platform can spot a useful signal about a doctor (a lab-result trend, a competitor search, a guideline download) and draft a plan to act on it. The value of that signal fades fast, roughly within 48 hours.
+The platform spots a doctor-level signal (a lab-result trend, a competitor search, a guideline download) and drafts a plan to act on it. The value of the signal fades within about 48 hours.
 
-Today's risk is not finding signals. It's the moment a person has to approve the plan:
+My first version asked a marketer to approve every plan. Critiquing it showed that model breaks:
 
-- If the plan is long or doesn't explain itself, people rubber-stamp it or ignore it.
-- If a rule (consent, approved content, frequency cap) fails *after* approval, trust drops.
-- If reps get every suggestion as an alert, they stop reading them.
+- **Volume.** One trigger drafts about 1,200 plans a month. If every plan waits for a person, signals expire.
+- **Ownership.** Marketing doesn't direct sales reps. Field steps must be suggestions the rep decides on.
+- **Trust.** If a rule (consent, MLR-approved content, frequency cap) fails after release, or an estimate looks falsely precise, people stop trusting the system.
 
-**Bet:** a short plan that explains each step, shows every rule check before the button, and lets the user edit or reject with a reason will be approved faster and trusted more.
+**Bet:** plans that pass every guardrail go out automatically. People review only the exceptions: blocked rules, conflicts, high-value doctors and similar plans that can be batched. Those few decisions must be fast, safe and explainable.
 
 ## 2. Users
 
-| User | What they need from this screen |
+| User | What they need |
 |---|---|
-| **HCP marketer** (primary) | See which doctors need action now, understand the plan in seconds, adjust it, approve it before it expires. |
-| **Omnichannel lead** | Ask why performance moved, preview rule or plan changes, approve them. Sees reject reasons to tune the AI. |
-| **Sales rep** (receives output) | Gets one clear CRM task with the reason behind it, and no duplicate email right after their own visit. |
+| **HCP marketer** (primary, "Ketaki B.") | See only what needs a decision, understand each plan in seconds, fix or adjust it, release it before the window closes |
+| **Omnichannel lead** | Set and change the guardrails, see the effect before going live, approve rule changes, ask why performance moved |
+| **Sales rep** (receives output) | One clear suggestion with a reason that is safe to say out loud, sized to their weekly capacity, which they can accept, snooze or decline |
 
 ## 3. Goals
 
-1. A marketer can review and approve a plan in under 3 minutes (median).
-2. No plan can be approved if it breaks a rule; the user always knows why.
-3. Every decision (approve, edit, reject, dismiss) is logged with who, when and what changed.
-4. Reject reasons are captured in a structured way so data science can improve plans.
+1. Most plans (target 70%+) are released automatically within guardrails.
+2. A marketer clears the exception queue in minutes; median time to decide under 3 minutes.
+3. No plan can be released if it breaks a rule, and the user always knows why and how to fix it.
+4. Every decision and every automatic release is logged: who, when, what changed vs the AI plan.
+5. Reject reasons and rep responses come back in a structured way to improve future plans.
 
 ## 4. Epic
 
-**As an HCP marketer, I can review, adjust and approve an AI-drafted engagement plan for a doctor signal in under three minutes, knowing it passes every rule before it goes out.**
+**As an HCP marketer, I review only the plans that need a human, and I can fix, adjust and release each one in under three minutes, knowing it passes every rule and that nothing is sent until its scheduled time.**
 
 ## 5. User stories
 
-### Story 1: See signals by urgency
-As a marketer, I want open signals sorted by priority with time left, so I act on the most valuable ones first.
-- **Given** I have open signals, **when** I open Signals, **then** they are sorted by priority score (high to low).
-- **Given** a signal has 12 hours or less left, **then** its time-left chip is highlighted.
-- **Given** a signal has expired, **then** it shows "Expired" and stays in the list until dismissed.
-- **Given** I have decided a signal today, **then** it moves to a "Done today" group with its status.
+### Story 1: See only what needs me (Today and Review)
+- **Given** plans were drafted overnight, **when** I open Today, **then** I see how many need my decision, how many were released automatically, and the median time to decide.
+- **Given** plans need review, **then** they are grouped by reason: Blocked by a rule, Approve together (batches), Conflicts, High value, Expired, and sorted by time left.
+- **Given** a signal expires within 14 hours and has no owner, **then** Today offers "Assign to a colleague".
+- In the Review queue, **J/K** moves between rows and **Enter** opens one.
 
-### Story 2: Understand the AI plan
-As a marketer, I want each step to explain itself, so I can trust or question it quickly.
-- **Given** I select a signal, **when** the plan loads, **then** I see the signal in one sentence and up to 4 steps.
-- Each step shows: channel, timing, content ID, approval status, and a one-line "Why".
-- **Given** the AI left a step off, **then** the step is shown unticked with the reason (e.g. "rep visited 6h ago").
-- **Given** the plan has a rep task, **then** I see a preview of exactly what the rep will get in CRM.
+### Story 2: Decide on a batch
+- **Given** many doctors got the same plan for the same signal, **then** they appear as one batch with the shared steps, impact range and rules check.
+- **Given** one doctor doesn't fit (e.g. not on the target list, no consent), **then** that outlier is pinned at the top, unselected, with the reason.
+- **When** I release the batch, **then** only the selected doctors are released, sends are queued, and Undo is available.
 
-### Story 3: Edit the plan
-As a marketer, I want to turn steps on or off, so the plan fits what I know.
-- **Given** an open plan, **when** I tick or untick a step, **then** the rules check and the estimate update within 300 ms.
-- **Then** an "Edited · N changes" badge appears, counted against the AI's original plan.
-- **When** I press "Reset to AI plan", **then** all steps return to the AI's choice and the badge disappears.
-- Keyboard focus stays on the checkbox I changed.
+### Story 3: Understand a plan (Plan detail)
+- **Given** I open a plan, **then** the first thing I see is its status: "Ready to release" or "N blocking issues" with the first fix as a button.
+- **Then** I see why now (the signal in one sentence) and a 48-hour window timeline with each step placed on it (icon plus label, not colour alone).
+- Each step shows include, channel, timing, approved content, MLR status, a one-line "Why", and a preview of exactly what will go out.
+- The priority score has a breakdown (signal strength, doctor value, timing).
 
-### Story 4: Know why I can't approve
-As a marketer, I want to know exactly what's blocking approval and how to fix it.
-- **Given** any rule fails, **then** "Approve" is disabled and the reason appears next to it (linked with `aria-describedby`).
-- **Given** a fix exists (remove email step, swap to approved content, retry CRM sync), **then** a fix button appears under that rule.
-- **Given** no steps are selected, **then** Approve is disabled with "Select at least one step to approve."
-- Warnings (e.g. rep/email overlap) do not block approval.
+### Story 4: Fix and adjust a plan
+- **Given** a rule fails, **then** the rules panel shows it with a short explanation and a fix (remove email step, swap to approved content, merge conflicting plans, retry CRM sync).
+- **When** I change timing, swap content, include or exclude a step, or add a step, **then** rules and the impact range update immediately, and an "Edited · N changes" badge appears with "Reset to AI plan".
+- **When** I "Redraft with a note" (e.g. "No email this week, she is at a conference"), **then** the AI changes steps and timing using approved content only, and the note is logged.
 
-### Story 5: Approve and send
-As a marketer, I want to approve and know it worked.
-- **Given** all rules pass, **when** I press "Approve and send to tools", **then** each selected step is sent to its tool (CRM, email, media).
-- **Then** I see a confirmation with Undo available for 8 seconds; Undo returns the plan to open and removes the log entry.
-- **Then** the activity log records: approver, time, steps sent, number of edits vs AI plan.
-- **Then** focus moves to "Next signal" (or the plan heading if none is left).
+### Story 5: Release with a send queue
+- **Given** no rule fails and at least one step is included, **when** I release (**A**), **then** each step is queued, scheduled or delivered to CRM, and I see "What happens next" with a status for each step.
+- Queued emails can be cancelled and scheduled ads stopped until their send time. Sent items can't be undone, and the UI says so.
+- Undo on the release toast returns the plan to review if nothing has gone out yet.
 
 ### Story 6: Reject with a reason
-As a marketer, I want to reject a plan and say why, so the system learns.
-- **When** I press Reject, **then** a dialog asks for one reason: Wrong doctor or not a priority / Timing is off / Content isn't right / Rep is already handling it / Other.
-- **Given** I pick "Other", **then** a note is required.
-- **Given** I confirm, **then** nothing is sent, the reason and note are logged, and Undo is available for 8 seconds.
-- The dialog traps focus, closes on Esc, and returns focus sensibly.
+- **When** I reject (**X**), **then** a side sheet asks for one reason (Wrong doctor or not a priority / Timing is off / Content isn't right / Rep already handling it / Other). "Other" requires a note.
+- I can choose "Don't suggest this doctor for this signal type for 30 days".
+- Nothing is sent, the reason is logged, and Undo is available.
 
-### Story 7: Ask why performance moved
-As an omnichannel lead, I want to ask a question and get a sourced answer I can act on.
-- **Given** I ask a supported question, **then** I see a plain-language answer, its drivers (chart), its data basis, freshness and confidence.
-- **Then** I see proposed changes with checkboxes and a live projected impact.
-- **Given** no change is selected, **then** Approve is disabled with a reason.
-- **Given** the question can't be answered, **then** the UI says so instead of guessing.
+### Story 7: The rep decides field steps
+- **Given** a plan with a rep step is released, **then** the rep receives a suggestion in CRM with a reason that is safe to say (never patient or lab data), what marketing will send, approved talking points and suggested timing.
+- **When** the rep accepts, snoozes or declines (with a reason), **then** the response appears on the plan and in its log.
+- Rep suggestions respect a weekly capacity per rep.
+
+### Story 8: Change guardrails safely
+- The omnichannel lead edits a trigger as WHEN (signal type, minimum priority) → THEN (channels, max steps) → GUARDRAILS (email cap across all plans and brands, skip email after a rep visit, max rep suggestions a week) → RELEASE (review every plan / auto-release below a priority / batch similar plans).
+- Consent and MLR approval are always enforced and can't be switched off.
+- Every change shows a before/after replay of the last 30 days, needs approval, has a start date and is versioned.
+
+### Story 9: Ask why performance moved
+- **Given** I ask a supported question, **then** I get a plain answer, its likely drivers including "Unexplained", the data basis, freshness and confidence, and a "How we know" method note.
+- Suggested changes show ranges; "Open in Guardrails to apply" pre-fills the guardrail where possible.
+- **Given** the question can't be answered, **then** the UI says "I don't know that yet" instead of guessing.
 
 ## 6. Edge cases
 
-| Case | Expected behaviour | In prototype |
+| Case | Expected behaviour | Where to see it |
 |---|---|---|
-| **Signal expired** | Banner "Signal expired", plan read-only, only action is Dismiss (logged as "expired before review"). | Edge case: Signal expired |
-| **No email consent** | Consent rule fails, Approve disabled with reason, fix: "Remove the email step". | Edge case: No email consent |
-| **Content not approved** | Step shows "In review"; rule fails naming the content ID; if an approved alternative exists, offer "Use approved X". | Edge case: Content not approved |
-| **CRM sync failure** | Banner: digital steps still work; rep rule fails with "Retry CRM sync"; unticking the rep task lets user approve digital only. | Edge case: CRM sync failure |
-| **Rep visit and email overlap** | AI leaves the email off and says why. If user adds it back: non-blocking warning. | Edge case: Rep visit and email overlap |
-| **Frequency cap reached** | Cap rule fails with the count ("4 of 4 in 30 days"); fix: remove the email step. | Edge case: Email frequency cap |
-| **Empty signal list** | "No new signals. You're caught up." with refresh timing. Never a blank panel. | Edge case: No signals |
-| **User edits the AI plan** | Edited badge, live rules and estimate, Reset to AI plan, edit count saved in the log. | Untick any step |
-| **User rejects** | Required reason, note for Other, nothing sent, logged, undo. | Press Reject |
-| Rules check slow or fails | Show "Checking…" on the rules list; Approve disabled until it returns; run a final server check on approve. | Not built |
-| Plan changed by someone else | On approve, if plan version changed, show "This plan was updated by X. Review changes." | Not built |
-| Signal expires while open | Switch to the expired state live; keep any edits visible but read-only. | Not built |
+| **Signal expired** | Red status, read-only plan; actions are Dismiss (logged) or Draft a follow-up | Dr. V. Lobo |
+| **No email consent** | Consent rule fails; fix: remove email step | Dr. A. Wagle |
+| **Content not approved** | Step shows "In MLR review"; fix: use the approved alternative | Dr. S. Talwar |
+| **Email cap reached** | Cap counts every plan and brand; fix: remove email step | Dr. N. Kamble |
+| **Two plans conflict** | Banner with two choices: merge (recommended) or cancel the other | Dr. M. Sequeira |
+| **CRM sync failure** | Global banner; rep steps are held, digital steps can still go; Retry sync | Avatar menu → Simulate CRM outage |
+| **Rep at weekly limit** | Warning: the suggestion waits until next week | Rules panel |
+| **Batch outlier** | Pinned, unselected, with the reason | 38 cardiologists batch |
+| **Empty queue** | "You're caught up", with how many plans went out automatically | Avatar menu → Show empty review queue |
+| **User edits the AI plan** | Edited badge, live rules and range, Reset to AI plan, edits logged | Any plan |
+| **User rejects** | Required reason, note for Other, optional 30-day suppression, Undo | Any plan |
+| **Cancel after release** | Cancel queued email / stop ad until send time; sent items are final | Released plan |
+| Rules check slow or failing | Show "Checking…", block release until it returns, re-check on release | Not built |
+| Two people open the same plan | Show who else is viewing; on release, detect a changed plan version | Not built |
 
 ## 7. Definition of done
 
-- All acceptance criteria above pass, checked by QA.
-- Every state has a designed screen: loading, empty, error, expired, decided.
-- Works from 380px wide to desktop with no sideways scrolling.
-- Keyboard: every action reachable; tabs use arrow keys; dialog traps focus and closes on Esc; visible focus everywhere.
-- Text and controls meet WCAG 2.1 AA contrast in light and dark themes; status is never shown by colour alone.
-- Rule messages and button reasons are read by screen readers.
-- Analytics events fire: `plan_viewed`, `step_toggled`, `plan_reset`, `plan_approved`, `plan_rejected` (with reason), `plan_undo`, `signal_dismissed`.
-- API errors are handled and shown in plain language.
+- All acceptance criteria pass, checked by QA.
+- Every state has a designed screen: loading (skeleton), empty, error, expired, decided, released.
+- Works from 375px to desktop with no sideways scrolling; decision bars stay reachable on phones.
+- Keyboard: every action reachable; shortcuts shown as key caps; sheets and dialogs trap focus and close on Esc; visible focus everywhere.
+- WCAG 2.1 AA contrast in light and dark; status is never shown by colour alone.
+- Analytics events: `queue_viewed`, `plan_opened`, `step_toggled`, `content_swapped`, `fix_applied`, `plan_redrafted`, `plan_released`, `send_cancelled`, `plan_rejected` (with reason), `batch_released`, `rep_responded`, `guardrail_submitted`.
+- API errors shown in plain language.
 - Product owner has accepted the story in the demo environment.
 
 ## 8. Non-goals (this release)
 
-- Editing content, timing or channel inside a step (only on/off, plus choosing among approved subject lines).
-- Creating new steps from scratch.
-- Bulk approve across many doctors.
-- Changing the AI model or scoring.
-- A rep-facing mobile view (we only preview what the rep gets).
-- Free-form questions beyond the supported set in "Ask about performance".
+- Writing new email copy. The AI only selects and orders MLR-approved modules.
+- Per-doctor attribution of lift. Lift is measured at segment level.
+- A full rep app. Only the suggestion card is specified.
+- Changing the scoring model.
+- Free-form questions beyond the supported set in Ask.
 
 ## 9. Success metrics
 
 | Metric | Definition | Starting target |
 |---|---|---|
-| Time to approve | Median time from plan opened to approved | < 3 min |
-| % plans edited | Approved plans with at least one change vs AI | 20–40% (above 60% means the AI plan is off) |
-| % plans rejected | Rejected / decided | < 15%, with top 3 reasons reviewed each sprint |
+| Auto-release rate | Plans released without a human / all plans | 70%+ |
+| Time to decide | Median time from opening an exception to a decision | < 3 min |
 | Expired unreviewed | Signals that expired with no decision | < 5% |
-| Undo rate | Approvals undone within 8s | < 3% (higher means the confirm step is unclear) |
+| Plans edited | Human-reviewed plans with at least one change | 20–40% (above 60% means the AI plan is off) |
+| Plans rejected | Rejected / reviewed, with top 3 reasons each sprint | < 15% |
+| Sends cancelled | Queued items cancelled after release | < 3% (higher means the review step is unclear) |
+| Rep acceptance | Suggestions accepted / delivered | 60%+ |
 
 Targets are my assumptions; replace them with real baselines in the first month.
 
-## 10. Open questions
+## 10. Proposed API (to agree with backend)
+
+- `GET /review-queue` → plans and batches needing a human, with group and `expiresAt`
+- `GET /plans/:id` → steps, defaults, content options with MLR status, plan version
+- `POST /plans/:id/check` → rules for a given set of steps (target < 300 ms)
+- `POST /plans/:id/redraft` `{ note }` → new steps (approved content only)
+- `POST /plans/:id/release` `{ steps, planVersion }` → send queue items
+- `POST /plans/:id/queue/:stepId/cancel`
+- `POST /plans/:id/reject` `{ reason, note, suppressDays }`
+- `POST /batches/:id/release` `{ doctorIds }`
+- `GET /plans/:id/events` → activity log
+- `GET /guardrails/:trigger`, `POST /guardrails/:trigger/replay`, `POST /guardrails/:trigger/submit`
+- `GET /integrations/crm/status`; rep responses arrive as events
+
+## 11. Open questions
 
 **Backend**
-- Endpoints needed (proposed):
-  - `GET /signals?status=open` (list, sorted, with `expiresAt`)
-  - `GET /signals/:id/plan` (steps, default on/off, skip reasons, plan version)
-  - `POST /plans/:id/check` (rules check for a given set of steps; target < 300 ms)
-  - `POST /plans/:id/approve` `{steps, planVersion}` and `POST /plans/:id/reject` `{reason, note}`
-  - `POST /plans/:id/undo` (within the undo window)
-  - `GET /signals/:id/events` (activity log)
-  - `GET /integrations/crm/status`
-- Is "send to tools" one call that fans out, or one call per channel? How do we show partial failure?
-- Where do consent and frequency caps live, and are they checked at approve time again?
+- Is release one call that fans out to each tool, or one per channel? How do we show partial failure?
+- Is the email cap checked again at send time, across brands?
+- Can the guardrails replay run in seconds on 30 days of data?
 
 **Data science**
-- How is "expected extra prescriptions per 100 similar doctors" calculated, and what range should we show instead of one number?
-- How fresh are signals and the estimate (minutes, hours, daily)?
-- How is lift measured after the fact: control group, matched doctors, time lag?
-- Which reject reasons are most useful for improving plans?
+- How is the impact range calculated, and what confidence levels can we honestly show?
+- How fresh are signals, consent and MLR status (minutes, hours, daily)?
+- How is lift measured after the fact: matched comparison, holdout, time lag?
+- Which reject reasons and rep decline reasons are most useful for retraining?
 
 **QA**
-- Can we get a seeded test environment with each edge case (expired, no consent, content in review, CRM down, cap reached)?
-- How do we test timing (signal expiring while the page is open)?
-- What does the audit trail need to show for compliance, and how long is it kept?
+- Can we seed a test environment with every edge case above?
+- How do we test time (a signal expiring while open, a queued send reaching its time)?
 
 **Product / compliance**
-- Who is allowed to approve: brand marketer, omnichannel lead, or both? Do some plans need two approvers?
-- Does medical-legal review status come into the platform in real time?
+- Which plans must always have a human, regardless of guardrails?
+- Who can approve guardrail changes? Is two-person approval needed?
+- What must the audit trail show for auto-releases, and how long is it kept?
+- Is the rep-facing reason text reviewed by compliance?

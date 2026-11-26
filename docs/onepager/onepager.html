@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Signal to Action – one-pager</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+@page{size:A4;margin:0}
+*{box-sizing:border-box}
+body{margin:0;width:210mm;height:297mm;font:9.4px/1.42 Inter,system-ui,sans-serif;color:#1c1c1e;background:#f2f2f7;-webkit-print-color-adjust:exact;print-color-adjust:exact;overflow:hidden;position:relative}
+h1,h2{margin:0;letter-spacing:-0.02em;line-height:1.1}
+h1{font-size:25px;font-weight:700}
+h2{font-size:11.5px;font-weight:600;margin:0 0 4px;color:#075e66}
+p{margin:0 0 4px}ul{margin:0;padding-left:12px}li{margin-bottom:2px}
+.top{background:#0a7c86;color:#fff;padding:8mm 11mm 6mm}
+.top p{color:#d9f1f2;font-size:11px;margin-top:4px;max-width:150mm}
+.meta{display:flex;justify-content:space-between;gap:10px;margin-top:6px;font-size:8.8px}
+.meta span:first-child{background:rgba(255,255,255,.16);padding:3px 7px;border-radius:99px}
+.body{padding:4.5mm 11mm 0}
+.shots{display:grid;grid-template-columns:1.15fr 1fr;gap:3.5mm;margin-bottom:3.5mm}
+.shots img{width:100%;border-radius:6px;display:block;border:0.5px solid #d8d8de}
+.shots figure{margin:0}.shots figcaption{font-size:8.3px;color:#6c6c70;margin-top:2px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:3.5mm}
+.card{background:#fff;border-radius:8px;padding:3mm 3.5mm;margin-bottom:3.5mm}
+.ph{color:#8f4a00;font-style:italic}
+table{border-collapse:collapse;width:100%;font-size:8.6px}td,th{border-bottom:0.5px solid #e5e5ea;padding:1.6px 2px;text-align:left;vertical-align:top}th{color:#6c6c70;font-weight:500}
+.honest{border-left:3px solid #0a7c86;background:#e6f4f5;padding:2mm 3mm;margin-bottom:3.5mm;border-radius:0 6px 6px 0}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:3mm}
+.g3 b{display:block;font-size:10px}
+.goal{color:#6c6c70;font-size:8.5px;margin-bottom:2px}
+.foot{font-size:7.8px;color:#6c6c70;padding:0 11mm;position:absolute;bottom:5mm;left:0;right:0}
+</style></head><body>
+<div class="top">
+  <h1>Signal to Action</h1>
+  <p>A concept for the screens where a pharma brand team decides what happens after a doctor-level signal: what goes out automatically, what needs a person, and what the sales rep sees.</p>
+  <div class="meta"><span>Independent concept from public information · fictional data (brand “Velora”) · not affiliated with any company</span><span>Viraj · Nashik, India</span></div>
+</div>
+<div class="body">
+  <div class="shots">
+    <figure><img src="plan.png" alt="Plan detail screen"><figcaption>Plan detail: decision first, 48h window, editable steps, live rules with one-click fixes, impact as a range.</figcaption></figure>
+    <figure><img src="today.png" alt="Today screen"><figcaption>Today: only exceptions need a person; 46 plans went out automatically within guardrails.</figcaption></figure>
+  </div>
+
+  <div class="g2">
+    <div>
+      <div class="card">
+        <h2>The problem and the bet</h2>
+        <p>Finding the signal isn't the hard part. Acting well within 48 hours is. If every plan waits for a person, signals expire; if nothing does, trust breaks the first time a rule is missed.</p>
+        <p><b>Bet:</b> plans that pass every guardrail go out automatically. People review only exceptions (blocked rules, conflicts, high-value doctors, batches), and those few decisions are fast, safe and explainable.</p>
+      </div>
+      <div class="card">
+        <h2>What I changed after critiquing v1</h2>
+        <table>
+          <tr><th>Gap in v1</th><th>Fix in v2</th></tr>
+          <tr><td>Approve every plan</td><td>Review by exception, batches, auto-release rules</td></tr>
+          <tr><td>Marketer approves rep visits</td><td>Rep gets a suggestion and decides; answer flows back</td></tr>
+          <tr><td>One precise number</td><td>Ranges, confidence, “How we know”</td></tr>
+          <tr><td>“Undo” after sending</td><td>Send queue: cancel until send time</td></tr>
+          <tr><td>On/off edits only</td><td>Timing, approved content, add step, redraft with a note</td></tr>
+          <tr><td>Cap ignored other plans</td><td>Cap across all plans and brands; conflict merge</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h2>Spec summary</h2>
+        <p><b>Epic:</b> review only the plans that need a human; fix, adjust and release each in under 3 minutes, knowing it passes every rule.</p>
+        <p><b>9 stories</b> · <b>14 edge cases</b> (expired, no consent, MLR review, cap, conflict, CRM down, rep capacity, outlier, empty, cancel after release…) · definition of done · proposed API · open questions.</p>
+        <p><b>Metrics:</b> 70%+ auto-released · &lt; 3 min to decide · &lt; 5% expired unreviewed · &lt; 3% sends cancelled · 60%+ rep acceptance.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h2>How I worked</h2>
+        <ul>
+          <li>Researched the company and category from public sources.</li>
+          <li>Built a v1 HTML prototype, then critiqued its logic and found the gaps.</li>
+          <li>Wrote a design brief; generated 8 screens in Stitch (Apple-like, teal).</li>
+          <li>Built it in React + TypeScript with shadcn/ui, Tailwind, cmdk, Recharts using AI coding tools; tested on desktop, phone and dark mode.</li>
+        </ul>
+      </div>
+      <div class="card" style="background:#fdf6ec">
+        <h2 style="color:#8f4a00">Usability test findings</h2>
+        <table>
+          <tr><th>Who</th><th>Background</th><th>Key finding</th></tr>
+          <tr><td>P1</td><td class="ph">pharma / marketing</td><td class="ph">to fill after testing</td></tr>
+          <tr><td>P2</td><td class="ph">product / ops</td><td class="ph">to fill after testing</td></tr>
+          <tr><td>P3</td><td class="ph">non-specialist</td><td class="ph">to fill after testing</td></tr>
+        </table>
+        <p style="margin-top:4px"><b>What I changed afterward:</b> <span class="ph">to fill after testing</span></p>
+      </div>
+      <div class="honest"><b>New to pharma; here's what I'd verify in your real product:</b> which plans must always have a human, how MLR status and consent reach the platform, how CRM sync fails and what reps see, how lift is measured, and what the audit trail must show.</div>
+      <div class="card">
+        <h2>Try it in the prototype</h2>
+        <ul>
+          <li>Fix Dr. Wagle's consent issue, release, then stop the ad.</li>
+          <li>Release the 38-doctor batch without the outlier.</li>
+          <li>Accept the suggestion in the rep's view; see it on the plan.</li>
+          <li>Change a guardrail and read the 30-day before/after.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>30 / 60 / 90 days, mapped to the role's success criteria</h2>
+    <div class="g3">
+      <div><b>30 days</b><div class="goal">Know the product, team and roadmap; own the FE backlog.</div><ul><li>Walk every UI surface with SMEs; list top pain points.</li><li>Clean the backlog; agree a definition of ready.</li></ul></div>
+      <div><b>60 days</b><div class="goal">First AI prototype tested with internal experts.</div><ul><li>Prototype one roadmap screen on the demo environment.</li><li>Three SME sessions; stories a sprint ahead.</li></ul></div>
+      <div><b>90 days</b><div class="goal">One screen from AI prototype through SME testing to production.</div><ul><li>Ship and accept it against the definition of done.</li><li>Engineers rarely wait: track blocked-story days.</li></ul></div>
+    </div>
+  </div>
+</div>
+<div class="foot">Live prototype: <span class="ph">add your hosted link</span> · Velora, all doctors, reps, NPIs and figures are fictional. Company context is from public press releases and coverage (2026).</div>
+</body></html>

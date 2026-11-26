@@ -1,6 +1,6 @@
 # Usability test log: Signal to Action
 
-Prototype: `index.html` (hosted link: _add after deploying_) · Moderator: Viraj · Format: 20–25 min, remote, screen share, think aloud
+Prototype: the Signal to Action React app (hosted link: _add after deploying_) · Moderator: Viraj · Format: 25 min, remote, screen share, think aloud
 
 ## Who to test with (3 people)
 
@@ -12,10 +12,10 @@ Prototype: `index.html` (hosted link: _add after deploying_) · Moderator: Viraj
 
 ## Before the session
 
-- [ ] Open the hosted link on the Signals screen. Edge cases load from the "Demo guide" button (top right).
+- [ ] Open the hosted link on **Today**. Use the avatar menu (top right) → **Reset demo** before each participant.
 - [ ] Ask permission to take notes (and record, if they agree).
 - [ ] Say: "I'm testing the design, not you. There are no wrong answers. Please think out loud."
-- [ ] Give 30 seconds of context: "You run marketing for a heart-failure drug. The system spots signals about doctors and drafts a plan. Your job is to approve good plans before they expire."
+- [ ] Give 30 seconds of context: "You run marketing for a heart-failure drug. The system spots signals about doctors and drafts plans. Most go out automatically within rules your team set. You only see the ones that need a person."
 
 ## Tasks
 
@@ -23,27 +23,29 @@ Give one at a time. Don't explain the UI. Note time taken and where they hesitat
 
 | # | Task (read this out) | Success looks like |
 |---|---|---|
-| T1 | "Look at the most urgent doctor and decide whether to approve the plan." | Picks Dr. Rao, reads steps, approves. |
-| T2 | "You think the journal ad is a waste for this doctor. Remove it, then approve." | Unticks step, notices estimate change, approves. |
-| T3 | Load edge case "No email consent" from the Demo guide. "Approve this plan." | Notices blocked state, understands why, uses the fix. |
-| T4 | Load "CRM sync failure". "The rep task can't go out. What would you do?" | Retries, or approves digital steps only. |
-| T5 | "Reject Dr. Iyer's plan because the rep is already handling it." | Finds Reject, picks reason, confirms. |
-| T6 | Go to "Ask" in the left menu. "Find out why Northeast cardiology dropped, and send the change you think matters most for approval." | Reads answer, chooses changes, sends. |
-| T7 | Go to "Triggers". "Make sure doctors get at most 3 emails a month. What changes?" | Changes the cap, reads the impact preview, submits. |
+| T1 | "What needs your attention today, and what already happened without you?" | Reads the counts, the grouped list and "Since yesterday" correctly. |
+| T2 | "Dr. Wagle's plan is blocked. Get it out before it expires." | Finds the consent issue, uses the fix, releases. |
+| T3 | "You've just released it. Stop the journal ad, keep the rest." | Finds "What happens next", stops the ad, understands what can't be undone. |
+| T4 | "Handle the 38 cardiologists in one go, but not the doctor who doesn't fit." | Opens the batch, notices the outlier is excluded, releases. |
+| T5 | "Dr. Sequeira has two plans clashing. Sort it out." | Understands the conflict, chooses merge (or cancel) and explains why. |
+| T6 | "Reject Dr. Bhattacharjee's plan because the rep is already handling it." | Finds Reject, picks the reason, confirms. |
+| T7 | "Find out why Northeast cardiology dropped, then make sure doctors get at most 3 emails a month. What changes?" | Reads the answer, opens Guardrails, sets the cap, reads the before/after, submits. |
+
+Optional: switch on **Simulate CRM outage** in the avatar menu and ask "What happens to the rep suggestion now?"
 
 ## What to observe
 
-- Where they look first. Do they notice time left and priority?
-- Do they read the "Why" lines? Do they trust the plan or question it?
-- Do they understand the estimate number? (Ask: "What does +2.0 mean to you?")
-- When approval is blocked, how long until they find the reason?
-- Do they notice the rep preview? Do they understand what the rep gets?
-- Any word they stumble on (e.g. "NPI", "frequency cap", "lift").
-- Do they find Undo after approving?
-
+- Do they understand that most plans went out without them? Does that feel safe or scary?
+- Where do they look first on a plan: the status line, the timeline, the steps or the rules?
+- Do they read the "Why" lines and previews? Do they trust the plan or question it?
+- Do they understand the impact range? (Ask: "What does +1.2 to +2.4 mean to you?")
+- When something is blocked, how long until they find the fix?
+- Do they understand the rep decides field steps, not marketing?
+- Do they understand cancel vs undo after release?
+- Any word they stumble on (e.g. "NPI", "MLR", "guardrail", "lift").
 ## Questions after the tasks
 
-1. On a scale of 1–5, how confident would you be approving plans like this every day? Why?
+1. On a scale of 1–5, how comfortable would you be letting most plans go out automatically with these guardrails? Why?
 2. What was the most confusing moment?
 3. What would you need to see before trusting the AI plan more?
 4. (P1 only) What's missing that a real brand team would expect?
@@ -59,6 +61,7 @@ Give one at a time. Don't explain the UI. Note time taken and where they hesitat
 | T4 | | | |
 | T5 | | | |
 | T6 | | | |
+| T7 | | | |
 
 Confidence score: __ /5 · Most confusing: · Quote:
 
@@ -71,6 +74,7 @@ Confidence score: __ /5 · Most confusing: · Quote:
 | T4 | | | |
 | T5 | | | |
 | T6 | | | |
+| T7 | | | |
 
 Confidence score: __ /5 · Most confusing: · Quote:
 
@@ -83,6 +87,7 @@ Confidence score: __ /5 · Most confusing: · Quote:
 | T4 | | | |
 | T5 | | | |
 | T6 | | | |
+| T7 | | | |
 
 Confidence score: __ /5 · Most confusing: · Quote:
 
