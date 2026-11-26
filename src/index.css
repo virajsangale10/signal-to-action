@@ -1,0 +1,160 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@fontsource-variable/inter";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Signal to Action theme: Apple-like calm, deep teal accent, status colours reserved for status. */
+:root {
+  --radius: 0.625rem;
+  --background: #f2f2f7;
+  --foreground: #1c1c1e;
+  --card: #ffffff;
+  --card-foreground: #1c1c1e;
+  --popover: #ffffff;
+  --popover-foreground: #1c1c1e;
+  --primary: #0a7c86;
+  --primary-foreground: #ffffff;
+  --secondary: #f2f2f7;
+  --secondary-foreground: #1c1c1e;
+  --muted: #f5f5f7;
+  --muted-foreground: #6c6c70;
+  --tertiary: #aeaeb2;
+  --accent: #e6f4f5;
+  --accent-foreground: #075e66;
+  --destructive: #d70015;
+  --border: #e5e5ea;
+  --input: #d8d8de;
+  --ring: #0a7c86;
+  --hover: #f5f5f7;
+  --sidebar: rgb(250 250 252 / 0.82);
+
+  --success: #248a3d;
+  --success-soft: #e5f3e8;
+  --success-ink: #1d6e31;
+  --warning: #b35c00;
+  --warning-soft: #fdeedc;
+  --warning-ink: #8f4a00;
+  --danger: #d70015;
+  --danger-soft: #fbe5e7;
+  --danger-ink: #a30010;
+
+  --chart-1: #0a7c86;
+  --chart-2: #8e8e93;
+  --chart-3: #d70015;
+  --chart-4: #b35c00;
+  --chart-5: #248a3d;
+}
+
+.dark {
+  --background: #000000;
+  --foreground: #f2f2f7;
+  --card: #1c1c1e;
+  --card-foreground: #f2f2f7;
+  --popover: #2c2c2e;
+  --popover-foreground: #f2f2f7;
+  --primary: #3fc1c9;
+  --primary-foreground: #00292d;
+  --secondary: #2c2c2e;
+  --secondary-foreground: #f2f2f7;
+  --muted: #2c2c2e;
+  --muted-foreground: #98989f;
+  --tertiary: #636366;
+  --accent: #0e3436;
+  --accent-foreground: #7fdde3;
+  --destructive: #ff453a;
+  --border: #38383a;
+  --input: #48484a;
+  --ring: #3fc1c9;
+  --hover: #2c2c2e;
+  --sidebar: rgb(22 22 24 / 0.82);
+
+  --success: #30d158;
+  --success-soft: #0f2e18;
+  --success-ink: #30d158;
+  --warning: #ff9f0a;
+  --warning-soft: #33230a;
+  --warning-ink: #ffb340;
+  --danger: #ff453a;
+  --danger-soft: #3a1214;
+  --danger-ink: #ff6961;
+
+  --chart-1: #3fc1c9;
+  --chart-2: #8e8e93;
+  --chart-3: #ff453a;
+  --chart-4: #ff9f0a;
+  --chart-5: #30d158;
+}
+
+@theme inline {
+  --font-sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-tertiary: var(--tertiary);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-hover: var(--hover);
+  --color-sidebar: var(--sidebar);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-ink: var(--success-ink);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-ink: var(--warning-ink);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-ink: var(--danger-ink);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    @apply bg-background text-foreground;
+    overflow-x: clip;
+    font-feature-settings: "cv11", "ss01", "ss03";
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  h1, h2, h3 {
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .tabular { font-variant-numeric: tabular-nums; }
+  .hairline { border-width: 0.5px; }
+  .frosted { backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
